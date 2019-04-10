@@ -1,0 +1,5 @@
+Packages that provide data to illustrate key data science ideas
+"nycflights13": Airline flights data
+"gapminder": World development data
+"Lahman": Baseball data
+"mtcars": Prebuild cars data 

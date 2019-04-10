@@ -1,0 +1,18 @@
+Data Analyst: Collects data, visualizes data with various tools and looks for patterns and insights. Knows basic statistics and has business/domain knowledge.
+
+Data Engineer: Develops and manages infrastructure that deals with big data. A specialist in Data Wrangling. Well versed with tools such as Hadoop, NoSQL and MapReduce. Sets up data pipelines.
+
+Data Wrangling: Transform raw data into a form suitable for analysis. For example, combining multiple datasets, removing inconsistencies, converting into a specific format.
+
+Data Cleansing: Raw data with missing values, bad delimiters or inconsistent records is repaired to syntactic and semantic correctness.
+
+EDA: Exploratory Data Analysis: a first step in exploring data without statistical modeling and inference.
+
+Literate programming: is a programming paradigm introduced by Donald Knuth in which a program is given as an explanation of the program logic in a natural language, such as English, interspersed with snippets of macros and traditional source code, from which a compilable source code can be generated.
+
+Definition of Package: Packages are the fundamental units of reproducible R code. They include reusable functions, the documentation that describes how to use them, and sample data.
+
+Pandoc: Pandoc is a free and open-source document converter, widely used as a writing tool (especially by scholars) and as a basis for publishing workflows.
+
+Non-Rectangular data: Collections of values that are each associated with a variable and an observation is called as rectangular data. The datasets that do not naturally fit in this paradigm: including images, sounds, trees, and text are called as Non-Rectangular data. Rectangular data frames are extremely common in science and industry, and is believed that they are a great place to start data science journey.
+

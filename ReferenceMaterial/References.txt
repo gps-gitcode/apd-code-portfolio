@@ -1,0 +1,32 @@
+https://github.com/Rdatatable/data.table
+
+Tools: sparklyr, rhipe, and ddr 
+
+R
+R is a great place to start your data science journey because it is an environment designed from the ground up to support data science. R is not just a programming language, but it is also an interactive environment for doing data science. To support interaction, R is a much more flexible language than many of its peers. This flexibility comes with its downsides, but the big upside is how easy it is to evolve tailored grammars for specific parts of the data science process. These mini languages help you think about problems as a data scientist, while supporting fluent interaction between your brain and the computer.
+
+
+R Packages : tidyverse
+
+reprex - Package problematic code which is reproducible 
+
+Twitter hastag :- #rstats 
+
+http://www.r-bloggers.com - Aggregates data from 500 sites
+
+GitHub repo :- https://github.com/hadley/r4ds
+
+
+How to check the columns, details, of input file ?
+
+
+Googles R Style guide
+https://google.github.io/styleguide/Rguide.xml
+
+https://www.computerworld.com/article/2921176/great-r-packages-for-data-import-wrangling-visualization.html
+
+Dataframe tutorial in python
+https://www.datacamp.com/community/tutorials/pandas-tutorial-dataframe-python
+
+Dataframe tutorial in R
+https://www.datacamp.com/community/tutorials/intro-data-frame-r
