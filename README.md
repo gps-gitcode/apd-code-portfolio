@@ -1,9 +1,9 @@
-# Code Portfolio Repository for Applied Data Science Course
+# Code Portfolio repository for Applied Data Science Course
 
-Purpose of this repository is to capture useful code snippets learnt during Applied Data Science course. The Repository is arranged in following way
+Purpose of this repository is to capture useful information in addition to useful code snippets learnt during Applied Data Science course. This repository is arranged in following way
 
 ## apd-code-portfolio
-Main Repository folder which will below sub folders 
+Main Repository folder which has below sub folders 
 
 ### Data
 This folder will have all data file that would in used in the code samples checked-in into this repository
