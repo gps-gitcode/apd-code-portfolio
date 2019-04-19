@@ -9,27 +9,32 @@ output: html_document
 knitr::opts_chunk$set(message=FALSE)
 ```
 
-
 ## Introduction 
-
 In this final report we are supposed to apply the learnings from the course on one of the datasets provided.
 
-```{r message=FALSE, echo=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(readr) #read files from disk
 library(tidyverse) #data manipulation 
 library(cluster) #clustering algorithms
-
+library(ggpubr) #produce customized gg2plot which are publicatio ready
 ```
 
 ## Step 1 - Dataset selection
-The dataset that we will be working on as part of this report will be 
-**Bike Vendors**
-Let us read the dataset and populate in a dataframe **df**
+The dataset that i will be working on as part of this report will be **Bike Vendors**. Reading the data below in a dataframe named **df** and check the column names
 
 ```{r}
 df <- read_csv("../Data/bikeVendors.csv") # Read the data
+dim(df) #print dimension details
+names(df) #Display column names
+```
+
+There seems to be extra space in the column names, so let us remove those extra spaces.
+
+```{r}
 names(df) <- make.names(names(df)) # Removing extra column spaces
 ```
+
+
 ## Step 2 - Epicycle analysis of data
 We will be applying all 5 core activities of epicycle analysis of data as part of the final report. Below are 5 core activities that are performed as part of data analaysis.
 
@@ -44,7 +49,7 @@ Let us take step by step approach to work on the dataset choosen. Begining with 
 ## Step 3 - Data Description 
 The selected dataset **Bike Vendors** has **97** observations and **35** variables. It is seen that out of 35 variables **4** variables are of type **char** and remaining variables are **numeric**
 
-Below are the column names of the dataset
+Below are the column names of the dataset after removing the extra spaces.
 
 ```{r echo=FALSE}
 names(df)
@@ -56,15 +61,12 @@ Based on the data we can find answers to some of the below questions
 
 1) Which category has more bike options?
 2) Which are Top 5 costlier bikes and Top 5 cheaper bikes ?
-1) Which vendor sells bike at cheapest price ?
-2) Which vendor sells bike at same price as MSRP ?
+3) What is mean price of bikes for each frame type?
 
 
 ## Step 4 - Data Exploration
 ### Exploratory plots and descriptions 
-As we noticed this dataset has categorization of bikes, their price and their price distribution at different vendors. Let us explore the data based on different factors
-
-There are 2 broad categories of bikes based on type of frame. As we can see that there more number of models available of frame type carbon than Aluminum
+As we noticed, this dataset has categorization of bikes, their price and price distribution at different vendors. Let us explore the data based on different factors. There are 2 broad categories of bikes based on type of frame. As we can see that there more number of models available for frame type carbon than Aluminum
 
 ```{r}
 table(df$frame) %>% barplot(col="wheat", xlab = "Type of Frame", ylab = "Number of Bikes")
@@ -78,64 +80,145 @@ df %>%
   summarise(mean(price))
 ```
 
-In addition to frame, there are also 2 more factors based on which bikes are categorized. It is category1 and Category2. Below is the summary of bike based on different category 
+There are also 2 more factors based on which bikes are categorized. It is category1 and Category2. Below is the summary of bike based on those two category.
 
 ```{r echo = FALSE}
 count(df,frame,category1,category2)
 ```
-There is largest collection of bikes available in **Cross Country Race** category which are **Carbon** frame based **Mountain bikes**. This answers our question 1. We can also see that there are only 2 bike option available in **Fat Bike** category which **Aluminum** frame based **Mountain bikes**  
+There is largest collection of bikes available in **Cross Country Race** category which are **Carbon** frame based **Mountain bikes**. We can also see that there are only 2 bike option available in **Fat Bike** category which **Aluminum** frame based **Mountain bikes**  
 
 ```{r}
 boxplot(df$price~df$frame, main="Price range based on frame", xlab="Frame type", ylab = "Price", col="blue", border = "orange")
 
 ```
 
-The above boxplot shows the price distribution based on frame type. It can be seen that data for frame type "Aluminum" is normally distributed, but there is greater variation in the price for bikes of frame type "Carbon".  There are 2 outlier points we can see ecah in both the category.  
+The above boxplot shows the price distribution based on frame type. It can be seen that data for frame type "Aluminum" is normally distributed, but there is greater variation in the price for bikes of frame type "Carbon".  There are 2 outlier points we can see in each category.  
 
 
 ```{r}
 hist(df$price, col="darkorange", border="dodgerblue", breaks = 30, main = "Histogram of Price Distribution", xlab = "Price", ylab = "Count")
 rug(df$price)
-
 ```
 
-If we see the overall distribution of the price we can noticed that more number of bike options are available in price range of say 1500 to 4000.
+If we see the overall distribution of the price we can notice that more number of bike options are available in price range say 1500 to 4000.
 
 ```{r}
 g_bike <- ggplot(df, aes(category2, fill = frame))
 g_bike + geom_bar(position = position_stack(reverse = TRUE)) + ggtitle("Bikes based on Category2 type") + coord_flip()
+
 ```
 
 ### Cluster analysis
-For cluster analysis let us create copy of original data set and nullify all the categorical variables
+For Cluster analysis we would require all numerical data. I have selected **San.Francisco.Cruisers**, **Seattle.Race.Equipment**, and **Tampa.29ers** columns for clustering. Below are the details of the subset of the data selected for clustering.
 
 ```{r}
-df_cluster <- df[,6:10] #create copy of original data set
-dim(df_cluster) #dimension before
+df_cluster <- df[,32:34] #extract the columns for clustering
+dim(df_cluster) #print dimension of cluster
+```
 
+Using the kmeans() internal function of R i have defined cluster of size 3. Since i have selected data for 3 different venders i have selected number of cluster as 3.
+```{r}
 #Apply k-means cluster
 clus_output <- kmeans(df_cluster,3)
 clus_output
+```
 
+As we can see, after applying k-means clustering, the output has 3 clusters with size 31, 45, 21. The results also present cluster means. The clustering vector shows how each of these 97 data points is categorized into three clusters. The within cluster sum of squares are also presented. The within cluster sum of squares measure the variability of the points within each cluster. The data points in a cluster with a larger value of within cluster sum of square have greater variability. But such square varies by the number of data points in one cluster.  
+
+The k-means results also provide many components we could view. For example, If we want to know the size of each cluster, we could do it by the following command
+
+```{r}
 clus_output$size
 clus_output$cluster
+```
 
+In order to check how good this fit has been we would plot the dataset. The data points will be coloured by clustering results
+
+```{r}
 #Plot the clusters with different color as the model
 plot(df_cluster, col=clus_output$cluster)
+```
 
+We can see that the three clusters are reflected by points in black, green, and red. When we plot the clusters, we could see that these clusters are clearly separated by the combination of some attributes, such as **San.Francisco.Cruisers**, **Seattle.Race.Equipment**, and **Tampa.29ers**. It is also obvious that the clusters have different sizes.
+
+Now we want to compare the fit of clusters by our model and the original clusters by the attribute price.
+
+```{r}
+plot(df[c("San.Francisco.Cruisers","Seattle.Race.Equipment")], col=clus_output$cluster)
+plot(df[c("San.Francisco.Cruisers","Seattle.Race.Equipment")], col=df$price)
+
+```
+
+Below output shows how the prices are clustered
+```{r}
+table(df$price,clus_output$cluster)
 ```
 
 ### Regression analysis
+For performing regression analysis on the data we would need to choose one dependent variable and one independent variable.For the below dataset i am considering price as my dependent variable and the vendor data as independent variable. 
+To validate this we need to make a Null hypothesis that there is no linear relation. I am making plot between **price** and 3 other vendors i.e. **San.Francisco.Cruisers**, **Seattle.Race.Equipment**, and **Tampa.29ers**. We need to calculate mean of **price** and plot horizontal line which is equal to mean value.This is our null hypothesis that will be shown by using abline() function.
+
 ```{r}
-df1 <- df
-df1 <- mutate_at(df1, vars(model,category1, category2,frame), as.factor)
+df1 <- df #create copy of dataset
+df1 <- mutate_at(df1, vars(model,category1, category2,frame), as.factor) #Factor character data
+
 plot(price~San.Francisco.Cruisers, data=df1)
+
+#Null Hypothesis 
+#Calculate mean concentration
 mean.df1 = mean(df1$price)
+mean.df1
+
+#Plot horizontal line 
 abline(h=mean.df1)
-lmodel = lm(price~San.Francisco.Cruisers, data=df1)
+
+plot(price~Seattle.Race.Equipment, data=df1)
+abline(h=mean.df1)
+
+plot(price~Tampa.29ers, data=df1)
+abline(h=mean.df1)
+
+```
+
+Below is my linear regression model by using *lm* package
+```{r}
+#lm model to fit a regression line through the data
+lmodel <- lm(price~San.Francisco.Cruisers+Seattle.Race.Equipment+Tampa.29ers, data=df1)
 summary(lmodel)
+```
+
+From the model output , we could see the coeffcients of regression line. In order to check how good our model will fit with data we need to plot the residuals and fitted model
+
+```{r}
+#Calculate residuals
 plot(lmodel)
 ```
 
+By observing above plots, we can say that the linear model has fitted our data to some extent. From the Multiple R-Squared provided by summary() function above, we could see that **20.56%** of the data could be explained by the linear model.
 
 ## Results
+Based on the overall analysis conducted on the **bikeVendors** dataset we got below insights. 
+
+1) There are more number of models available in **"Cross Country Race"** category
+
+2) Below are the top 5 bikes based on highest and lowest price
+```{r echo = FALSE}
+#Sort the data set based on price
+df <- arrange(df, desc(price))
+
+#Top 5 costly bikes
+head(select(df, model,category2,price),5)
+
+df <- arrange(df, price)
+
+#Top 5 cheaper bikes
+head(select(df, model,category2,price),5)
+```
+
+3) Average price for **Carbon** frame based bikes is 5339 and for **Aluminum** frame based bikes 1980
+
+```{r echo = FALSE}
+df %>% 
+  group_by(frame) %>% 
+  summarise(mean(price))
+```
