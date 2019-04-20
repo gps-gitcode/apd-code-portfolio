@@ -1,0 +1,31 @@
+---
+title: "isoslides_r_markdown"
+author: "GP"
+date: "April 3, 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown isoslides presentation
+This markdown document is to practise some basic features to create isoslide presentation using R Markdown 
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
+##Slide with code highligting
+
+### <b>
+x <- 10
+y <- x * 2
+### </b>
