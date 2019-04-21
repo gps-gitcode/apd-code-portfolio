@@ -18,3 +18,8 @@ nycflights13::flights %>%  #Alternative way to print data by limiting it
 
 nycflights13::flights %>% #Scrollable view of the data
   View()
+
+#Q-Q plot example
+mpg_hp_add = lm(mpg ~ hp + am, data = mtcars)
+qqnorm(resid(mpg_hp_add), col = "darkgrey")
+qqline(resid(mpg_hp_add), col = "dodgerblue", lwd = 2)
