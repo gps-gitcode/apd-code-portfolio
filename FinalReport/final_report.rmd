@@ -13,10 +13,9 @@ knitr::opts_chunk$set(message=FALSE)
 In this final report we are supposed to apply the learnings from the course on one of the datasets provided.
 
 ```{r message=FALSE, warning=FALSE}
-library(readr) #read files from disk
+#library(readr) #read files from disk
 library(tidyverse) #data manipulation 
 library(cluster) #clustering algorithms
-library(ggpubr) #produce customized gg2plot which are publicatio ready
 ```
 
 ## Step 1 - Dataset selection
@@ -70,6 +69,7 @@ As we noticed, this dataset has categorization of bikes, their price and price d
 
 ```{r}
 table(df$frame) %>% barplot(col="wheat", xlab = "Type of Frame", ylab = "Number of Bikes")
+
 ```
 
 **Average bike price based on frame type**
@@ -88,19 +88,17 @@ count(df,frame,category1,category2)
 There is largest collection of bikes available in **Cross Country Race** category which are **Carbon** frame based **Mountain bikes**. We can also see that there are only 2 bike option available in **Fat Bike** category which **Aluminum** frame based **Mountain bikes**  
 
 ```{r}
+par(mfrow = c(1,2))
 boxplot(df$price~df$frame, main="Price range based on frame", xlab="Frame type", ylab = "Price", col="blue", border = "orange")
 
-```
-
-The above boxplot shows the price distribution based on frame type. It can be seen that data for frame type "Aluminum" is normally distributed, but there is greater variation in the price for bikes of frame type "Carbon".  There are 2 outlier points we can see in each category.  
-
-
-```{r}
 hist(df$price, col="darkorange", border="dodgerblue", breaks = 30, main = "Histogram of Price Distribution", xlab = "Price", ylab = "Count")
 rug(df$price)
 ```
 
+The above boxplot shows the price distribution based on frame type. It can be seen that data for frame type "Aluminum" is normally distributed, but there is greater variation in the price for bikes of frame type "Carbon".  There are 2 outlier points we can see in each category.  
+
 If we see the overall distribution of the price we can notice that more number of bike options are available in price range say 1500 to 4000.
+
 
 ```{r}
 g_bike <- ggplot(df, aes(category2, fill = frame))
@@ -144,13 +142,14 @@ We can see that the three clusters are reflected by points in black, green, and 
 Now we want to compare the fit of clusters by our model and the original clusters by the attribute price.
 
 ```{r}
+par(mfrow = c(1,2))
 plot(df[c("San.Francisco.Cruisers","Seattle.Race.Equipment")], col=clus_output$cluster)
 plot(df[c("San.Francisco.Cruisers","Seattle.Race.Equipment")], col=df$price)
 
 ```
 
 Below output shows how the prices are clustered
-```{r}
+```{r collapse=TRUE}
 table(df$price,clus_output$cluster)
 ```
 
@@ -162,15 +161,14 @@ To validate this we need to make a Null hypothesis that there is no linear relat
 df1 <- df #create copy of dataset
 df1 <- mutate_at(df1, vars(model,category1, category2,frame), as.factor) #Factor character data
 
-plot(price~San.Francisco.Cruisers, data=df1)
-
 #Null Hypothesis 
 #Calculate mean concentration
 mean.df1 = mean(df1$price)
 mean.df1
 
-#Plot horizontal line 
-abline(h=mean.df1)
+par(mfrow = c(2,2))
+plot(price~San.Francisco.Cruisers, data=df1)
+abline(h=mean.df1) #Plot horizontal line 
 
 plot(price~Seattle.Race.Equipment, data=df1)
 abline(h=mean.df1)
@@ -191,6 +189,7 @@ From the model output , we could see the coeffcients of regression line. In orde
 
 ```{r}
 #Calculate residuals
+par(mfrow = c(2,2))
 plot(lmodel)
 ```
 
